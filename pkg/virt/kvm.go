@@ -18,7 +18,7 @@ func GetVirtConn() (*libvirt.Connect, error) {
 	return conn, nil
 }
 
-func CreateXMLFile(instance *model.Instance) (string, error) {
+func CreateXMLFile(instance *model.Instance, disk string, network string, configDrivePath string) (string, error) {
 	domcfg := &libvirtxml.Domain{
 		Type: "kvm",
 		Name: instance.HostName,
@@ -156,7 +156,7 @@ func CreateXMLFile(instance *model.Instance) (string, error) {
 		Device: "cdrom",
 		Source: &libvirtxml.DomainDiskSource{
 			File: &libvirtxml.DomainDiskSourceFile{
-				File: "configDrivePath", //TODO virt cdrom
+				File: configDrivePath, //TODO virt cdrom
 			},
 		},
 		Target: &libvirtxml.DomainDiskTarget{
@@ -192,7 +192,7 @@ func CreateXMLFile(instance *model.Instance) (string, error) {
 				},
 			},
 			Target: &libvirtxml.DomainDiskTarget{
-				Dev: "###", // TODO
+				Dev: disk,
 				Bus: "virtio",
 			},
 
@@ -234,9 +234,9 @@ func CreateXMLFile(instance *model.Instance) (string, error) {
 }
 func helpUint(x uint) *uint { return &x }
 
-func CreateVirualMachine() error {
+func CreateVirualMachine(disk, configpath, network string) error {
 	instance := model.NewInstance()
-	xml, err := CreateXMLFile(instance)
+	xml, err := CreateXMLFile(instance, disk, configpath, network)
 	if err != nil {
 		log.Println(fmt.Sprintf("instance: %s define xml error", instance.Id))
 		return err
@@ -262,7 +262,3 @@ func CreateVirualMachine() error {
 	}
 	return nil
 }
-
-
-
-
