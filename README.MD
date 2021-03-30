@@ -2,4 +2,4 @@
 
 创建一个govirt来管理libvirtd
 
-!(arch)[./img/arch.png]
+![arch](./img/arch.png)
