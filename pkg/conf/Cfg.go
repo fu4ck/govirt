@@ -1,0 +1,6 @@
+package conf
+
+
+func NewCfg() {
+
+}
